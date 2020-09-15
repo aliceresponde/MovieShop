@@ -7,6 +7,14 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+<<<<<<< HEAD
+=======
+def apiPropertiesFile = rootProject.file("api.properties")
+def apiProperties = new Properties()
+if (apiPropertiesFile.exists()) {
+    apiProperties.load(new FileInputStream(apiPropertiesFile))
+}
+>>>>>>> initial setup
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -17,6 +25,13 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+
+        buildConfigField("String", "BASE_URL", apiProperties['BASE_URL'])
+        buildConfigField("String", "API_KEY", apiProperties['API_KEY'])
+        buildConfigField("String", "IMG_URL", apiProperties['IMG_URL'])
+        buildConfigField("String", "VIDEO_URL", apiProperties['VIDEO_URL'])
+
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
