@@ -1,0 +1,62 @@
+package com.example.movieshop.ui.movielist
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.movieshop.databinding.FragmentMoviesListBinding
+import com.example.movieshop.ui.common.BaseFragment
+import com.example.movieshop.ui.model.MovieItem
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class MoviesListFragment : BaseFragment<FragmentMoviesListBinding>() {
+
+    private val viewModel: MoviesListViewModel by viewModels()
+    private val adapter: MoviesAdapter by lazy {
+        MoviesAdapter(
+            addItemToCart = ::addItemToCart,
+            removeItemFromCart = ::removeItemFromCard,
+            showItem = ::showItemDetail,
+            isCart = false
+        )
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentMoviesListBinding.inflate(inflater)
+        initViews()
+        setObservers()
+        return binding.root
+    }
+
+    private fun initViews() {
+        binding.viewModel = viewModel
+        binding.moviesList.adapter = adapter
+        binding.loading.visibility = GONE
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun setObservers() {
+        viewModel.movies.observe(viewLifecycleOwner, { adapter.update(it) })
+    }
+
+    private fun addItemToCart(item: MovieItem) {
+        viewModel.addItemToCart(item)
+    }
+
+    private fun removeItemFromCard(item: MovieItem) {
+        viewModel.removeItemFromCard(item)
+    }
+
+    private fun showItemDetail(item: MovieItem) {
+        val action =
+            MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailActivity(item)
+        findNavController().navigate(action)
+    }
+}
