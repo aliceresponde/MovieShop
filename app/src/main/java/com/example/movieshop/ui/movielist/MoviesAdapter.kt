@@ -14,8 +14,8 @@ import com.example.movieshop.ui.model.MovieItem
 
 class MoviesAdapter(
     private var data: MutableList<MovieItem> = mutableListOf(),
-    private val addItemToCart: (MovieItem) -> Unit,
-    private val removeItemFromCart: (MovieItem) -> Unit,
+    private val addItemToCart: (Int) -> Unit,
+    private val removeItemFromCart: (Int) -> Unit,
     private val showItem: (MovieItem) -> Unit,
     private val isCart: Boolean
 ) : RecyclerView.Adapter<MovieViewHolder>() {
@@ -49,8 +49,8 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
         item: MovieItem,
         isCart: Boolean,
-        addItemToCart: (MovieItem) -> Unit,
-        removeItemFromCart: (MovieItem) -> Unit,
+        addItemToCart: (Int) -> Unit,
+        removeItemFromCart: (Int) -> Unit,
         showItem: (MovieItem) -> Unit
     ) {
         binding.movieImage.loadFromUrl(item.imageUrl)
@@ -67,17 +67,17 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private fun setListeners(
         showItem: (MovieItem) -> Unit,
         item: MovieItem,
-        addItemToCart: (MovieItem) -> Unit,
-        removeItemFromCart: (MovieItem) -> Unit
+        addItemToCart: (Int) -> Unit,
+        removeItemFromCart: (Int) -> Unit
     ) {
         with(binding) {
             root.setOnClickListener { showItem.invoke(item) }
 
             addMovie.setOnClickListener {
-                addItemToCart.invoke(item)
+                addItemToCart.invoke(item.id)
             }
             removeMovie.setOnClickListener {
-                removeItemFromCart.invoke(item)
+                removeItemFromCart.invoke(item.id)
             }
         }
     }

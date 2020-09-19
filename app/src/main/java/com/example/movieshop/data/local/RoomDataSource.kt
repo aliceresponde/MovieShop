@@ -10,6 +10,10 @@ class RoomDataSource @Inject constructor(db: MoviesDatabase) : LocalDataSource {
         return movieDao.getAllMoviesFlow()
     }
 
+    override fun getMovieDetailFlow(id: Int): Flow<Movie> {
+        return movieDao.getMovieDetailFlow(id)
+    }
+
     override fun getShoppingMoviesFlow(): Flow<List<Movie>> {
         return movieDao.getAllCartMoviesFlow()
     }
@@ -18,15 +22,19 @@ class RoomDataSource @Inject constructor(db: MoviesDatabase) : LocalDataSource {
         movieDao.insertAll(data)
     }
 
-    override suspend fun addItemToCart(id: Int, quantity: Int) {
-        movieDao.updateQuantity(id, quantity)
-    }
-
-    override suspend fun removeItemFromCart(id: Int, quantity: Int) {
-        movieDao.updateQuantity(id, quantity)
+    override suspend fun getMovieDetailBy(id: Int): Movie? {
+        return movieDao.getMovieDetailBy(id)
     }
 
     override suspend fun removeAllItemInCart() {
         movieDao.removeAllItemInCart()
+    }
+
+    override suspend fun addMovieToCar(id: Int) {
+        movieDao.addITemToChart(id)
+    }
+
+    override suspend fun removeMovieFromCart(id: Int) {
+        movieDao.removeITemFromChart(id)
     }
 }

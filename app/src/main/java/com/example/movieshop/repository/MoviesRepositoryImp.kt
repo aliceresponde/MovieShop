@@ -8,8 +8,6 @@ import com.example.movieshop.data.remote.RemoteResponse
 import com.example.movieshop.data.remote.response.MovieResult
 import com.example.movieshop.ui.model.MovieItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMap
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class MoviesRepositoryImp(
@@ -30,6 +28,10 @@ class MoviesRepositoryImp(
         }
     }
 
+    override fun getMovieDetailFlow(id: Int): Flow<MovieItem> {
+        return local.getMovieDetailFlow(id).map { it.toMovieItem() }
+    }
+
     override fun getShoppingMoviesFlow(): Flow<List<MovieItem>> {
         return local.getShoppingMoviesFlow().map { movies ->
             movies.map { it.toMovieItem() }
@@ -40,14 +42,13 @@ class MoviesRepositoryImp(
         local.removeAllItemInCart()
     }
 
-    override suspend fun addItemToCart(id: Int, quantity: Int) {
-        local.addItemToCart(id, quantity)
+    override suspend fun addMovieToCart(id: Int) {
+        local.addMovieToCar(id)
     }
 
-    override suspend fun removeItemFromCard(id: Int, quantity: Int) {
-        local.removeItemFromCart(id, quantity)
+    override suspend fun removeMovieFromCart(id: Int) {
+        local.removeMovieFromCart(id)
     }
-
 
     private fun Movie.toMovieItem() =
         MovieItem(

@@ -18,15 +18,15 @@ class ShoppingChartViewModel @ViewModelInject constructor(
     val moviesInCart: LiveData<List<MovieItem>> =
         repository.getShoppingMoviesFlow().asLiveData(coroutineDispatcher)
 
-    fun addItemToCart(item: MovieItem) {
+    fun addItemToCart(id: Int) {
         viewModelScope.launch(coroutineDispatcher) {
-            repository.addItemToCart(item.id, item.quantity + 1)
+            repository.addMovieToCart(id)
         }
     }
 
-    fun removeItemFromCard(item: MovieItem) {
+    fun removeItemFromCard(id: Int) {
         viewModelScope.launch(coroutineDispatcher) {
-            repository.removeItemFromCard(item.id, item.quantity - 1)
+            repository.removeMovieFromCart(id)
         }
     }
 

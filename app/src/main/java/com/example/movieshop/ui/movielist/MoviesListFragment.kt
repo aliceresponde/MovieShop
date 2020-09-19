@@ -46,17 +46,17 @@ class MoviesListFragment : BaseFragment<FragmentMoviesListBinding>() {
         viewModel.movies.observe(viewLifecycleOwner, { adapter.update(it) })
     }
 
-    private fun addItemToCart(item: MovieItem) {
-        viewModel.addItemToCart(item)
+    private fun addItemToCart(id: Int) {
+        viewModel.addItemToCart(id)
     }
 
-    private fun removeItemFromCard(item: MovieItem) {
-        viewModel.removeItemFromCard(item)
+    private fun removeItemFromCard(id: Int) {
+        viewModel.removeItemFromCard(id)
     }
 
     private fun showItemDetail(item: MovieItem) {
         val action =
-            MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailActivity(item)
+            MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailActivity(item.id)
         findNavController().navigate(action)
     }
 }

@@ -8,9 +8,6 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(items: List<Movie>)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(movie: Movie)
-
     @Query("UPDATE movies SET quantity = :quantity WHERE id = :id")
     suspend fun updateQuantity(id: Int, quantity: Int)
 
@@ -26,6 +23,24 @@ interface MovieDao {
     @Query(value = "SELECT * FROM movies WHERE id = :id ")
     suspend fun getMovieById(id: Int): Movie
 
-    @Query(value = "DELETE  FROM movies WHERE quantity > 0")
+    @Query(value = "UPDATE movies SET quantity = 0 WHERE quantity > 0")
     suspend fun removeAllItemInCart()
+
+    @Query(value = "SELECT * FROM movies WHERE id = :id LIMIT 1")
+    suspend fun getMovieDetailBy(id: Int): Movie?
+
+    @Query(value = "SELECT * FROM movies WHERE id = :id LIMIT 1")
+    fun getMovieDetailFlow(id: Int): Flow<Movie>
+
+    @Transaction
+    suspend fun addITemToChart(id: Int) {
+        val movie = getMovieById(id)
+        updateQuantity(id, movie.quantity + 1)
+    }
+
+    @Transaction
+    suspend fun removeITemFromChart(id: Int) {
+        val movie = getMovieById(id)
+        updateQuantity(id, movie.quantity - 1)
+    }
 }

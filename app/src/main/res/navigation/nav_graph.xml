@@ -28,8 +28,12 @@
         android:name="com.example.movieshop.ui.moviedetail.MovieDetailActivity"
         android:label="MovieDetailActivity"
         tools:layout="@layout/activity_movie_detail">
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="www.movieshop.org/?id={id}" />
         <argument
-            android:name="item"
-            app:argType="com.example.movieshop.ui.model.MovieItem" />
+            android:name="id"
+            android:defaultValue="0"
+            app:argType="integer" />
     </activity>
 </navigation>

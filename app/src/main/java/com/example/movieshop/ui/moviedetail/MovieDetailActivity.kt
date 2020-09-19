@@ -1,37 +1,62 @@
 package com.example.movieshop.ui.moviedetail
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.movieshop.R
+import androidx.navigation.navArgs
+import com.example.movieshop.databinding.ActivityMovieDetailBinding
+import com.example.movieshop.ui.common.gone
+import com.example.movieshop.ui.common.loadFromUrl
+import com.example.movieshop.ui.common.visible
+import com.example.movieshop.ui.model.MovieItem
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieDetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMovieDetailBinding
+    private val args: MovieDetailActivityArgs by navArgs()
+    private val movieId: Int by lazy { args.id }
+    private val viewModel: MovieDetailViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_detail)
-        handleIntent()
+        binding = ActivityMovieDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupListeners()
+        setupObservers()
     }
 
-    /**
-     * @link[https://developer.android.com/studio/write/app-link-indexing]
-     */
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        handleIntent()
+    private fun setupListeners() {
+        binding.addMovie.setOnClickListener { viewModel.addItemToCart(movieId) }
+        binding.removeMovie.setOnClickListener { viewModel.removeToCart(movieId) }
     }
 
-    private fun handleIntent() {
-        val appLinkAction = intent.action
-        val appLinkData: Uri? = intent.data
-        if (Intent.ACTION_VIEW == appLinkAction) {
-            appLinkData?.lastPathSegment?.also { movieId -> getMovie(movieId.toInt()) }
+    private fun setupObservers() {
+        viewModel.getMovieDetailFlow(movieId).observe(this, { movieItem ->
+            movieItem?.let {
+                showMovieDetail(it)
+            }
+        })
+
+        viewModel.loadingVisibility.observe(this,{
+            binding.loading.visibility = it
+        })
+
+        viewModel.itemNotExistVisibility.observe(this, {
+            binding.noData.visibility =it
+        })
+    }
+
+    private fun showMovieDetail(item: MovieItem) {
+        with(binding) {
+            cardHolder.visible()
+            noData.gone()
+            loading.gone()
+            movieDate.text = item.date
+            movieOverview.text = item.overview
+            movieImage.loadFromUrl(item.imageUrl)
+            movieTitle.text = item.name
+            removeMovie.isEnabled = item.quantity > 0
         }
-    }
-
-    private fun getMovie(id: Int?) {
-        Toast.makeText(this, id.toString(), Toast.LENGTH_SHORT).show()
     }
 }
