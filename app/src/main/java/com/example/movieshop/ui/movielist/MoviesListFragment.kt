@@ -44,6 +44,9 @@ class MoviesListFragment : BaseFragment<FragmentMoviesListBinding>() {
 
     private fun setObservers() {
         viewModel.movies.observe(viewLifecycleOwner, { adapter.update(it) })
+        viewModel.loadingVisibility.observe(viewLifecycleOwner, {
+            binding.loading.visibility = it
+        })
     }
 
     private fun addItemToCart(id: Int) {

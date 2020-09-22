@@ -1,22 +1,34 @@
 package com.example.movieshop.ui.shoppingchart
 
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.movieshop.repository.MoviesRepository
 import com.example.movieshop.ui.model.MovieItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEmpty
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class ShoppingChartViewModel @ViewModelInject constructor(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val repository: MoviesRepository
 ) : ViewModel() {
+
+    private val _loadingVisibility = MutableLiveData<Int>()
+    val loadingVisibility: LiveData<Int> get() = _loadingVisibility
+
+
     val moviesInCart: LiveData<List<MovieItem>> =
-        repository.getShoppingMoviesFlow().asLiveData(coroutineDispatcher)
+        repository.getShoppingMoviesFlow()
+            .onStart {
+                _loadingVisibility.postValue(VISIBLE)
+            }.onCompletion {
+                _loadingVisibility.postValue(GONE)
+            }.asLiveData(coroutineDispatcher)
 
     fun addItemToCart(id: Int) {
         viewModelScope.launch(coroutineDispatcher) {

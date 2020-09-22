@@ -37,7 +37,7 @@ class MovieDetailViewModel @ViewModelInject constructor(
             _itemNotExistVisibility.postValue(VISIBLE)
         }.onCompletion {
             _loadingVisibility.postValue(GONE)
-        }.asLiveData()
+        }.asLiveData(coroutineDispatcher)
 
     fun addItemToCart(id: Int) {
         viewModelScope.launch(coroutineDispatcher) {

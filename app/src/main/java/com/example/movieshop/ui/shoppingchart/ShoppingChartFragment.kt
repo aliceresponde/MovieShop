@@ -45,6 +45,9 @@ class ShoppingChartFragment : BaseFragment<FragmentShoppingChartBinding>() {
 
     private fun setObservers() {
         viewModel.moviesInCart.observe(viewLifecycleOwner, { adapter.update(it) })
+        viewModel.loadingVisibility.observe(viewLifecycleOwner, {
+            binding.loading.visibility = it
+        })
     }
 
     private fun addItemToCart(id: Int) {

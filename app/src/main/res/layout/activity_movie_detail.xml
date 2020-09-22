@@ -15,6 +15,7 @@
         android:elevation="5dp"
         android:padding="16dp"
         android:visibility="gone"
+        tools:visibility="visible"
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +84,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/add"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/removeMovie"
                 app:layout_constraintStart_toStartOf="@+id/movieDate"
                 app:layout_constraintTop_toBottomOf="@+id/movieOverview" />
 
@@ -91,11 +91,11 @@
                 android:id="@+id/removeMovie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
                 android:backgroundTint="@android:color/holo_red_light"
                 android:text="@string/remove"
-                app:layout_constraintEnd_toEndOf="@+id/movieDate"
+                app:layout_constraintBottom_toBottomOf="@+id/addMovie"
+                app:layout_constraintStart_toEndOf="@+id/addMovie"
                 app:layout_constraintTop_toTopOf="@+id/addMovie" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
