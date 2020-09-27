@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.movieshop.databinding.FragmentShoppingChartBinding
 import com.example.movieshop.ui.common.BaseFragment
+import com.example.movieshop.ui.common.gone
+import com.example.movieshop.ui.common.showIf
 import com.example.movieshop.ui.model.MovieItem
 import com.example.movieshop.ui.movielist.MoviesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,11 +30,15 @@ class ShoppingChartFragment : BaseFragment<FragmentShoppingChartBinding>() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentShoppingChartBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initViews()
         setObservers()
-        return binding.root
+
     }
 
     private fun initViews() {
@@ -44,9 +50,14 @@ class ShoppingChartFragment : BaseFragment<FragmentShoppingChartBinding>() {
     }
 
     private fun setObservers() {
-        viewModel.moviesInCart.observe(viewLifecycleOwner, { adapter.update(it) })
-        viewModel.loadingVisibility.observe(viewLifecycleOwner, {
-            binding.loading.visibility = it
+        viewModel.moviesInCart.observe(viewLifecycleOwner, { items ->
+            adapter.update(items)
+            binding.button.showIf { items.isNotEmpty()}
+            binding.loading.gone()
+        })
+        viewModel.loadingVisibility.observe(viewLifecycleOwner, { binding.loading.visibility = it })
+        viewModel.deleteItemsVisibility.observe(viewLifecycleOwner, {
+            binding.button.visibility = it
         })
     }
 

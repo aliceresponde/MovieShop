@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.movieshop.databinding.FragmentMoviesListBinding
 import com.example.movieshop.ui.common.BaseFragment
+import com.example.movieshop.ui.common.gone
 import com.example.movieshop.ui.model.MovieItem
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,9 +31,13 @@ class MoviesListFragment : BaseFragment<FragmentMoviesListBinding>() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMoviesListBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initViews()
         setObservers()
-        return binding.root
     }
 
     private fun initViews() {
@@ -43,7 +48,9 @@ class MoviesListFragment : BaseFragment<FragmentMoviesListBinding>() {
     }
 
     private fun setObservers() {
-        viewModel.movies.observe(viewLifecycleOwner, { adapter.update(it) })
+        viewModel.movies.observe(viewLifecycleOwner, {
+            binding.loading.gone()
+            adapter.update(it) })
         viewModel.loadingVisibility.observe(viewLifecycleOwner, {
             binding.loading.visibility = it
         })
