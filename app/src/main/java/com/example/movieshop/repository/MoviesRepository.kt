@@ -1,6 +1,5 @@
 package com.example.movieshop.repository
 
-import androidx.lifecycle.LiveData
 import com.example.movieshop.ui.model.MovieItem
 import kotlinx.coroutines.flow.Flow
 

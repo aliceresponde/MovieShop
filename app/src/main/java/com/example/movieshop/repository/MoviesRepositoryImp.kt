@@ -10,6 +10,7 @@ import com.example.movieshop.ui.model.MovieItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+// TODO : Add mapper interface to cover converter methods
 class MoviesRepositoryImp(
     private val local: LocalDataSource,
     private val remote: RemoteDataSource
@@ -50,7 +51,8 @@ class MoviesRepositoryImp(
         local.removeMovieFromCart(id)
     }
 
-    private fun Movie.toMovieItem() =
+
+     private fun Movie.toMovieItem() =
         MovieItem(
             id = id,
             name = title,

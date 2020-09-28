@@ -88,7 +88,5 @@ internal class MoviesListViewModelTest() {
          // then
          verify(loadingObserver).onChanged(VISIBLE)
          verify(loadingObserver).onChanged(GONE)
-
-
      }
 }
